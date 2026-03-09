@@ -2,7 +2,6 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Katalog Produk</title>
 
 <style>
@@ -10,14 +9,14 @@
 body{
 margin:0;
 background:#000;
+font-family:Arial, sans-serif;
 overflow:hidden;
 }
 
 .slider{
 display:flex;
-width:100vw;
 height:100vh;
-overflow-x:scroll;
+overflow-x:auto;
 scroll-snap-type:x mandatory;
 scroll-behavior:smooth;
 }
@@ -25,6 +24,9 @@ scroll-behavior:smooth;
 .slide{
 flex:0 0 100%;
 scroll-snap-align:center;
+display:flex;
+justify-content:center;
+align-items:center;
 }
 
 .slide img{
@@ -33,22 +35,117 @@ height:100%;
 object-fit:contain;
 }
 
+.controls{
+position:fixed;
+bottom:20px;
+left:50%;
+transform:translateX(-50%);
+display:flex;
+align-items:center;
+gap:20px;
+background:rgba(0,0,0,0.5);
+padding:10px 20px;
+border-radius:20px;
+}
+
+button{
+background:white;
+border:none;
+padding:8px 14px;
+border-radius:10px;
+font-size:16px;
+cursor:pointer;
+}
+
+#page{
+color:white;
+font-size:14px;
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="slider">
+<div class="slider" id="slider">
 
 <div class="slide"><img src="1.jpg"></div>
 <div class="slide"><img src="2.jpg"></div>
 <div class="slide"><img src="3.jpg"></div>
 <div class="slide"><img src="4.jpg"></div>
 <div class="slide"><img src="5.jpg"></div>
-
-<!-- lanjutkan sampai 28 -->
+<div class="slide"><img src="6.jpg"></div>
+<div class="slide"><img src="7.jpg"></div>
+<div class="slide"><img src="8.jpg"></div>
+<div class="slide"><img src="9.jpg"></div>
+<div class="slide"><img src="10.jpg"></div>
+<div class="slide"><img src="11.jpg"></div>
+<div class="slide"><img src="12.jpg"></div>
+<div class="slide"><img src="13.jpg"></div>
+<div class="slide"><img src="14.jpg"></div>
+<div class="slide"><img src="15.jpg"></div>
+<div class="slide"><img src="16.jpg"></div>
+<div class="slide"><img src="17.jpg"></div>
+<div class="slide"><img src="18.jpg"></div>
+<div class="slide"><img src="19.jpg"></div>
+<div class="slide"><img src="20.jpg"></div>
+<div class="slide"><img src="21.jpg"></div>
+<div class="slide"><img src="22.jpg"></div>
+<div class="slide"><img src="23.jpg"></div>
+<div class="slide"><img src="24.jpg"></div>
+<div class="slide"><img src="25.jpg"></div>
+<div class="slide"><img src="26.jpg"></div>
+<div class="slide"><img src="27.jpg"></div>
+<div class="slide"><img src="28.jpg"></div>
 
 </div>
+
+<div class="controls">
+<button onclick="prev()">◀</button>
+<span id="page">1 / 28</span>
+<button onclick="next()">▶</button>
+</div>
+
+<script>
+
+const slider = document.getElementById("slider");
+const slides = document.querySelectorAll(".slide");
+const page = document.getElementById("page");
+
+let current = 0;
+
+function updatePage(){
+page.textContent = (current+1) + " / " + slides.length;
+}
+
+function next(){
+if(current < slides.length-1){
+current++;
+slider.scrollTo({
+left: slider.clientWidth * current,
+behavior:"smooth"
+});
+updatePage();
+}
+}
+
+function prev(){
+if(current > 0){
+current--;
+slider.scrollTo({
+left: slider.clientWidth * current,
+behavior:"smooth"
+});
+updatePage();
+}
+}
+
+slider.addEventListener("scroll",()=>{
+current = Math.round(slider.scrollLeft / slider.clientWidth);
+updatePage();
+});
+
+</script>
 
 </body>
 </html>
