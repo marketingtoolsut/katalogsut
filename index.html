@@ -1,19 +1,19 @@
 <!DOCTYPE html>
+
 <html>
 <head>
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Katalog Produk</title>
 
 <style>
 
 body{
 margin:0;
-background:#000;
-font-family:Arial, sans-serif;
+background:black;
 overflow:hidden;
+font-family:Arial;
 }
 
 .slider{
@@ -40,21 +40,22 @@ object-fit:contain;
 
 .controls{
 position:fixed;
-bottom:20px;
+bottom:25px;
 left:50%;
 transform:translateX(-50%);
 display:flex;
 align-items:center;
-gap:20px;
+gap:15px;
 background:rgba(0,0,0,0.5);
 padding:10px 20px;
 border-radius:20px;
+transition:opacity 0.4s;
 }
 
 button{
 background:white;
 border:none;
-padding:8px 14px;
+padding:8px 12px;
 border-radius:10px;
 font-size:16px;
 cursor:pointer;
@@ -65,6 +66,25 @@ color:white;
 font-size:14px;
 }
 
+.dots{
+position:fixed;
+bottom:80px;
+left:50%;
+transform:translateX(-50%);
+display:flex;
+gap:6px;
+}
+
+.dot{
+width:8px;
+height:8px;
+border-radius:50%;
+background:#666;
+}
+
+.dot.active{
+background:white;
+}
 
 #rotate{
 position:fixed;
@@ -77,114 +97,155 @@ color:white;
 display:none;
 align-items:center;
 justify-content:center;
-font-size:20px;
+font-size:22px;
 z-index:9999;
 text-align:center;
 }
 
-
-
 </style>
+
 </head>
 
 <body>
 
-
 <div id="rotate">
-<div>
-<p>Putar ponsel Anda ke mode landscape</p>
-</div>
+Putar ponsel ke mode landscape
 </div>
 
 <div class="slider" id="slider">
 
-<div class="slide"><img src="1.jpg"></div>
-<div class="slide"><img src="2.jpg"></div>
-<div class="slide"><img src="3.jpg"></div>
-<div class="slide"><img src="4.jpg"></div>
-<div class="slide"><img src="5.jpg"></div>
-<div class="slide"><img src="6.jpg"></div>
-<div class="slide"><img src="7.jpg"></div>
-<div class="slide"><img src="8.jpg"></div>
-<div class="slide"><img src="9.jpg"></div>
-<div class="slide"><img src="10.jpg"></div>
-<div class="slide"><img src="11.jpg"></div>
-<div class="slide"><img src="12.jpg"></div>
-<div class="slide"><img src="13.jpg"></div>
-<div class="slide"><img src="14.jpg"></div>
-<div class="slide"><img src="15.jpg"></div>
-<div class="slide"><img src="16.jpg"></div>
-<div class="slide"><img src="17.jpg"></div>
-<div class="slide"><img src="18.jpg"></div>
-<div class="slide"><img src="19.jpg"></div>
-<div class="slide"><img src="20.jpg"></div>
-<div class="slide"><img src="21.jpg"></div>
-<div class="slide"><img src="22.jpg"></div>
-<div class="slide"><img src="23.jpg"></div>
-<div class="slide"><img src="24.jpg"></div>
-<div class="slide"><img src="25.jpg"></div>
-<div class="slide"><img src="26.jpg"></div>
-<div class="slide"><img src="27.jpg"></div>
-<div class="slide"><img src="28.jpg"></div>
-
-</div>
-
-<div class="controls">
-<button onclick="prev()">◀</button>
-<span id="page">1 / 28</span>
-<button onclick="next()">▶</button>
-</div>
-
-<button onclick="fullscreen()">⛶</button>
-
 <script>
 
-const slider = document.getElementById("slider");
-const slides = document.querySelectorAll(".slide");
-const page = document.getElementById("page");
-
-let current = 0;
-
-function updatePage(){
-page.textContent = (current+1) + " / " + slides.length;
+for(let i=1;i<=28;i++){
+document.write('<div class="slide"><img src="'+i+'.jpg"></div>');
 }
-
-function next(){
-if(current < slides.length-1){
-current++;
-slider.scrollTo({
-left: slider.clientWidth * current,
-behavior:"smooth"
-});
-updatePage();
-}
-}
-
-function prev(){
-if(current > 0){
-current--;
-slider.scrollTo({
-left: slider.clientWidth * current,
-behavior:"smooth"
-});
-updatePage();
-}
-}
-
-slider.addEventListener("scroll",()=>{
-current = Math.round(slider.scrollLeft / slider.clientWidth);
-updatePage();
-});
 
 </script>
 
+</div>
 
+<div class="dots" id="dots"></div>
+
+<div class="controls" id="controls">
+
+<button onclick="prev()">◀</button>
+
+<span id="page">1 / 28</span>
+
+<button onclick="next()">▶</button>
+
+<button onclick="fullscreen()">⛶</button>
+
+</div>
 
 <script>
 
+const slider=document.getElementById("slider");
+const slides=document.querySelectorAll(".slide");
+const page=document.getElementById("page");
+const dots=document.getElementById("dots");
+const controls=document.getElementById("controls");
+
+let current=0;
+let hideTimer;
+
+for(let i=0;i<slides.length;i++){
+
+let dot=document.createElement("div");
+dot.className="dot";
+dots.appendChild(dot);
+
+}
+
+function updatePage(){
+
+page.textContent=(current+1)+" / "+slides.length;
+
+document.querySelectorAll(".dot").forEach((d,i)=>{
+d.classList.toggle("active",i===current);
+});
+
+}
+
+function next(){
+
+if(current<slides.length-1){
+
+current++;
+
+slider.scrollTo({
+left:slider.clientWidth*current,
+behavior:"smooth"
+});
+
+updatePage();
+
+}
+
+}
+
+function prev(){
+
+if(current>0){
+
+current--;
+
+slider.scrollTo({
+left:slider.clientWidth*current,
+behavior:"smooth"
+});
+
+updatePage();
+
+}
+
+}
+
+slider.addEventListener("scroll",()=>{
+
+current=Math.round(slider.scrollLeft/slider.clientWidth);
+
+updatePage();
+
+showControls();
+
+});
+
+function fullscreen(){
+
+if(!document.fullscreenElement){
+
+document.documentElement.requestFullscreen();
+
+}else{
+
+document.exitFullscreen();
+
+}
+
+}
+
+function showControls(){
+
+controls.style.opacity="1";
+
+clearTimeout(hideTimer);
+
+hideTimer=setTimeout(()=>{
+
+controls.style.opacity="0";
+
+},2000);
+
+}
+
+document.body.addEventListener("tap",showControls);
+
+updatePage();
+
 function checkOrientation(){
 
-if(window.innerHeight > window.innerWidth){
+if(window.innerHeight>window.innerWidth){
 
 document.getElementById("rotate").style.display="flex";
 
@@ -201,26 +262,6 @@ window.addEventListener("load",checkOrientation);
 
 </script>
 
-
-<script>
-
-function fullscreen(){
-
-if(!document.fullscreenElement){
-
-document.documentElement.requestFullscreen();
-
-}else{
-
-document.exitFullscreen();
-
-}
-
-}
-
-</script>
-
-
-
 </body>
+
 </html>
