@@ -4,7 +4,7 @@
 
 <head>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
 
 <title>Katalog Produk</title>
 
@@ -13,7 +13,8 @@
 body{
 margin:0;
 background:black;
-overflow:hidden;
+overscroll-behavior:none;
+touch-action: pan-x pan-y pinch-zoom;
 font-family:Arial;
 }
 
