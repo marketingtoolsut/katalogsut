@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Katalog Produk</title>
 
@@ -62,10 +65,36 @@ color:white;
 font-size:14px;
 }
 
+
+#rotate{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:black;
+color:white;
+display:none;
+align-items:center;
+justify-content:center;
+font-size:20px;
+z-index:9999;
+text-align:center;
+}
+
+
+
 </style>
 </head>
 
 <body>
+
+
+<div id="rotate">
+<div>
+<p>Putar ponsel Anda ke mode landscape</p>
+</div>
+</div>
 
 <div class="slider" id="slider">
 
@@ -105,6 +134,8 @@ font-size:14px;
 <span id="page">1 / 28</span>
 <button onclick="next()">▶</button>
 </div>
+
+<button onclick="fullscreen()">⛶</button>
 
 <script>
 
@@ -146,6 +177,50 @@ updatePage();
 });
 
 </script>
+
+
+
+<script>
+
+function checkOrientation(){
+
+if(window.innerHeight > window.innerWidth){
+
+document.getElementById("rotate").style.display="flex";
+
+}else{
+
+document.getElementById("rotate").style.display="none";
+
+}
+
+}
+
+window.addEventListener("resize",checkOrientation);
+window.addEventListener("load",checkOrientation);
+
+</script>
+
+
+<script>
+
+function fullscreen(){
+
+if(!document.fullscreenElement){
+
+document.documentElement.requestFullscreen();
+
+}else{
+
+document.exitFullscreen();
+
+}
+
+}
+
+</script>
+
+
 
 </body>
 </html>
