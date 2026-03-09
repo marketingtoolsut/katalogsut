@@ -8,6 +8,8 @@
 
 <title>Katalog Produk</title>
 
+<script src="https://unpkg.com/pinch-zoom-js@2.3.4/dist/pinch-zoom.umd.js"></script>
+
 <style>
 
 body{
@@ -99,12 +101,12 @@ max-width:80%;
 max-height:80%;
 object-fit:contain;
 }
+
 </style>
 
 </head>
 
 <body>
-
 
 <div id="rotate">
 <img src="rotatephone.png" alt="Rotate Phone">
@@ -115,7 +117,7 @@ object-fit:contain;
 <script>
 
 for(let i=1;i<=28;i++){
-document.write('<div class="slide"><img src="'+i+'.jpg" loading="lazy"></div>');
+document.write('<div class="slide"><pinch-zoom><img src="'+i+'.jpg" loading="lazy"></pinch-zoom></div>');
 }
 
 </script>
