@@ -1,8 +1,10 @@
 <!DOCTYPE html>
+
 <html>
+
 <head>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, user-scalable=yes">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Katalog Produk</title>
 
@@ -13,34 +15,28 @@ margin:0;
 background:black;
 overflow:hidden;
 font-family:Arial;
-touch-action:manipulation;
-}
-
-.viewer{
-position:relative;
-width:100vw;
-height:100vh;
-overflow:hidden;
 }
 
 .slider{
 display:flex;
-height:100%;
-transition:transform .35s ease;
+height:100vh;
+overflow-x:auto;
+scroll-snap-type:x mandatory;
+scroll-behavior:smooth;
 }
 
 .slide{
 flex:0 0 100%;
+scroll-snap-align:center;
 display:flex;
 justify-content:center;
 align-items:center;
 }
 
 .slide img{
-max-width:100%;
-max-height:100%;
+width:100%;
+height:100%;
 object-fit:contain;
-transition:transform .25s ease;
 }
 
 .controls{
@@ -51,57 +47,78 @@ left:50%;
 transform:translateX(-50%);
 
 display:flex;
-gap:12px;
+gap:10px;
 
-background:rgba(0,0,0,.6);
+background:rgba(0,0,0,0.6);
 padding:8px 14px;
 border-radius:20px;
 
-color:white;
-font-size:14px;
-
 opacity:0;
-transition:opacity .3s;
+pointer-events:none;
+
+transition:opacity 0.3s;
 
 }
 
 button{
+
 background:white;
 border:none;
-padding:6px 10px;
-border-radius:8px;
+padding:8px 12px;
+border-radius:10px;
+font-size:16px;
 cursor:pointer;
+
+}
+
+#page{
+color:white;
+font-size:14px;
 }
 
 #rotate{
+
 position:fixed;
 top:0;
 left:0;
 width:100%;
 height:100%;
+
 background:black;
+
 display:none;
 align-items:center;
 justify-content:center;
+
 z-index:9999;
+
 }
 
 #rotate img{
 max-width:80%;
+max-height:80%;
+object-fit:contain;
 }
-
 </style>
+
 </head>
 
 <body>
 
+
 <div id="rotate">
-<img src="rotatephone.png">
+<img src="rotatephone.png" alt="Rotate Phone">
 </div>
 
-<div class="viewer">
+<div class="slider" id="slider">
 
-<div class="slider" id="slider"></div>
+<script>
+
+for(let i=1;i<=28;i++){
+document.write('<div class="slide"><img src="'+i+'.jpg" loading="lazy"></div>');
+}
+
+</script>
 
 </div>
 
@@ -117,68 +134,34 @@ max-width:80%;
 
 </div>
 
-
 <script>
 
-const total=28
-const slider=document.getElementById("slider")
-const page=document.getElementById("page")
-const controls=document.getElementById("controls")
+const slider=document.getElementById("slider");
+const slides=document.querySelectorAll(".slide");
+const page=document.getElementById("page");
+const controls=document.getElementById("controls");
 
-let current=0
-let startX=0
-let isDragging=false
-let zoom=1
-let lastTap=0
+let current=0;
+let hideTimer;
 
-for(let i=1;i<=total;i++){
+function updatePage(){
 
-const div=document.createElement("div")
-div.className="slide"
-
-const img=document.createElement("img")
-img.dataset.src=i+".jpg"
-img.loading="lazy"
-
-div.appendChild(img)
-
-slider.appendChild(div)
-
-}
-
-const slides=document.querySelectorAll(".slide img")
-
-function loadVisible(){
-
-slides.forEach((img,i)=>{
-
-if(Math.abs(i-current)<=1){
-
-if(!img.src) img.src=img.dataset.src
-
-}
-
-})
-
-}
-
-function update(){
-
-slider.style.transform="translateX(-"+(current*100)+"%)"
-
-page.textContent=(current+1)+" / "+total
-
-loadVisible()
+page.textContent=(current+1)+" / "+slides.length;
 
 }
 
 function next(){
 
-if(current<total-1){
+if(current<slides.length-1){
 
-current++
+current++;
 
-update()
+slider.scrollTo({
+left:slider.clientWidth*current,
+behavior:"smooth"
+});
+
+updatePage();
 
 }
 
@@ -188,79 +171,38 @@ function prev(){
 
 if(current>0){
 
-current--
+current--;
 
-update()
+slider.scrollTo({
+left:slider.clientWidth*current,
+behavior:"smooth"
+});
+
+updatePage();
 
 }
 
 }
+
+slider.addEventListener("scroll",()=>{
+
+current=Math.round(slider.scrollLeft/slider.clientWidth);
+
+updatePage();
+
+showControls();
+
+});
 
 function fullscreen(){
 
 if(!document.fullscreenElement){
 
-document.documentElement.requestFullscreen()
+document.documentElement.requestFullscreen();
 
 }else{
 
-document.exitFullscreen()
-
-}
-
-}
-
-slider.addEventListener("touchstart",e=>{
-
-startX=e.touches[0].clientX
-isDragging=true
-
-})
-
-slider.addEventListener("touchend",e=>{
-
-if(!isDragging)return
-
-let diff=e.changedTouches[0].clientX-startX
-
-if(Math.abs(diff)>60){
-
-if(diff<0) next()
-else prev()
-
-}
-
-isDragging=false
-
-})
-
-slider.addEventListener("touchstart",function(e){
-
-let now=Date.now()
-
-if(now-lastTap<300){
-
-toggleZoom(e)
-
-}
-
-lastTap=now
-
-})
-
-function toggleZoom(e){
-
-const img=slides[current]
-
-if(zoom===1){
-
-zoom=2
-img.style.transform="scale(2)"
-
-}else{
-
-zoom=1
-img.style.transform="scale(1)"
+document.exitFullscreen();
 
 }
 
@@ -268,41 +210,44 @@ img.style.transform="scale(1)"
 
 function showControls(){
 
-controls.style.opacity=1
+controls.style.opacity="1";
+controls.style.pointerEvents="auto";
 
-clearTimeout(window.hideUI)
+clearTimeout(hideTimer);
 
-window.hideUI=setTimeout(()=>{
+hideTimer=setTimeout(()=>{
 
-controls.style.opacity=0
+controls.style.opacity="0";
+controls.style.pointerEvents="none";
 
-},1200)
+},1000);
 
 }
 
-document.addEventListener("touchstart",showControls)
-document.addEventListener("mousemove",showControls)
+document.addEventListener("touchstart",showControls);
+document.addEventListener("mousemove",showControls);
+
+updatePage();
 
 function checkOrientation(){
 
 if(window.innerHeight>window.innerWidth){
 
-document.getElementById("rotate").style.display="flex"
+document.getElementById("rotate").style.display="flex";
 
 }else{
 
-document.getElementById("rotate").style.display="none"
+document.getElementById("rotate").style.display="none";
 
 }
 
 }
 
-window.addEventListener("resize",checkOrientation)
-window.addEventListener("load",checkOrientation)
-
-update()
+window.addEventListener("resize",checkOrientation);
+window.addEventListener("load",checkOrientation);
 
 </script>
 
 </body>
+
 </html>
