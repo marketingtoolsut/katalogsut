@@ -5,9 +5,8 @@
 <head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Katalog Produk</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom/dist/panzoom.min.js"></script>
+<title>Katalog Produk</title>
 
 <style>
 
@@ -35,38 +34,41 @@ align-items:center;
 }
 
 .slide img{
-max-width:100%;
-max-height:100%;
+width:100%;
+height:100%;
 object-fit:contain;
 }
 
-.zoom{
-overflow:hidden;
-touch-action:none;
-}
-
 .controls{
+
 position:fixed;
 bottom:20px;
 left:50%;
 transform:translateX(-50%);
+
 display:flex;
 gap:10px;
+
 background:rgba(0,0,0,0.6);
 padding:8px 14px;
 border-radius:20px;
+
 opacity:0;
 pointer-events:none;
+
 transition:opacity 0.3s;
+
 }
 
 button{
+
 background:white;
 border:none;
 padding:8px 12px;
 border-radius:10px;
 font-size:16px;
 cursor:pointer;
+
 }
 
 #page{
@@ -75,16 +77,21 @@ font-size:14px;
 }
 
 #rotate{
+
 position:fixed;
 top:0;
 left:0;
 width:100%;
 height:100%;
+
 background:black;
+
 display:none;
 align-items:center;
 justify-content:center;
+
 z-index:9999;
+
 }
 
 #rotate img{
@@ -92,118 +99,55 @@ max-width:80%;
 max-height:80%;
 object-fit:contain;
 }
-
 </style>
 
 </head>
 
 <body>
 
+
 <div id="rotate">
-<img src="rotatephone.png">
+<img src="rotatephone.png" alt="Rotate Phone">
 </div>
 
-<div class="slider" id="slider"></div>
+<div class="slider" id="slider">
+
+<script>
+
+for(let i=1;i<=28;i++){
+document.write('<div class="slide"><img src="'+i+'.jpg" loading="lazy"></div>');
+}
+
+</script>
+
+</div>
 
 <div class="controls" id="controls">
 
-<button onclick="prev()">◀</button> <span id="page">1 / 28</span> <button onclick="next()">▶</button> <button onclick="fullscreen()">⛶</button>
+<button onclick="prev()">◀</button>
+
+<span id="page">1 / 28</span>
+
+<button onclick="next()">▶</button>
+
+<button onclick="fullscreen()">⛶</button>
 
 </div>
 
 <script>
 
-const slider = document.getElementById("slider");
-const page = document.getElementById("page");
-const controls = document.getElementById("controls");
-
-let current = 0;
-let hideTimer;
-const totalPages = 28;
-
-let panzoomInstances = [];
-
-function createSlides(){
-
-for(let i=1;i<=totalPages;i++){
-
-const slide=document.createElement("div");
-slide.className="slide";
-
-const zoom=document.createElement("div");
-zoom.className="zoom";
-
-const img=document.createElement("img");
-img.src=i+".jpg";
-img.loading="lazy";
-
-zoom.appendChild(img);
-slide.appendChild(zoom);
-slider.appendChild(slide);
-
-}
-
-}
-
-createSlides();
-
+const slider=document.getElementById("slider");
 const slides=document.querySelectorAll(".slide");
+const page=document.getElementById("page");
+const controls=document.getElementById("controls");
 
-function initZoom(){
-
-document.querySelectorAll(".zoom").forEach(el=>{
-
-const pz = Panzoom(el,{
-maxScale:4,
-minScale:1,
-contain:"outside"
-});
-
-panzoomInstances.push(pz);
-
-el.addEventListener("wheel", pz.zoomWithWheel);
-
-/* DOUBLE TAP RESET */
-
-let lastTap = 0;
-
-el.addEventListener("touchend",function(e){
-
-let currentTime = new Date().getTime();
-let tapLength = currentTime - lastTap;
-
-if(tapLength < 300 && tapLength > 0){
-
-pz.reset();
-
-}
-
-lastTap = currentTime;
-
-});
-
-el.addEventListener("dblclick",function(){
-
-pz.reset();
-
-});
-
-});
-
-}
-
-initZoom();
-
-function resetZoom(){
-
-panzoomInstances.forEach(pz=>{
-pz.reset();
-});
-
-}
+let current=0;
+let hideTimer;
 
 function updatePage(){
+
 page.textContent=(current+1)+" / "+slides.length;
+
 }
 
 function next(){
@@ -217,7 +161,6 @@ left:slider.clientWidth*current,
 behavior:"smooth"
 });
 
-resetZoom();
 updatePage();
 
 }
@@ -235,7 +178,6 @@ left:slider.clientWidth*current,
 behavior:"smooth"
 });
 
-resetZoom();
 updatePage();
 
 }
@@ -245,7 +187,9 @@ updatePage();
 slider.addEventListener("scroll",()=>{
 
 current=Math.round(slider.scrollLeft/slider.clientWidth);
+
 updatePage();
+
 showControls();
 
 });
@@ -253,9 +197,13 @@ showControls();
 function fullscreen(){
 
 if(!document.fullscreenElement){
+
 document.documentElement.requestFullscreen();
+
 }else{
+
 document.exitFullscreen();
+
 }
 
 }
@@ -272,19 +220,25 @@ hideTimer=setTimeout(()=>{
 controls.style.opacity="0";
 controls.style.pointerEvents="none";
 
-},1200);
+},1000);
 
 }
 
 document.addEventListener("touchstart",showControls);
 document.addEventListener("mousemove",showControls);
 
+updatePage();
+
 function checkOrientation(){
 
 if(window.innerHeight>window.innerWidth){
+
 document.getElementById("rotate").style.display="flex";
+
 }else{
+
 document.getElementById("rotate").style.display="none";
+
 }
 
 }
@@ -292,9 +246,8 @@ document.getElementById("rotate").style.display="none";
 window.addEventListener("resize",checkOrientation);
 window.addEventListener("load",checkOrientation);
 
-updatePage();
-
 </script>
 
 </body>
+
 </html>
