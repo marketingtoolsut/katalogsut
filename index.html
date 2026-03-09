@@ -98,6 +98,14 @@ max-width:80%;
 max-height:80%;
 object-fit:contain;
 }
+
+.slide img{
+width:100%;
+height:auto;
+max-height:100%;
+object-fit:contain;
+}
+
 </style>
 
 </head>
@@ -244,6 +252,26 @@ document.getElementById("rotate").style.display="none";
 
 window.addEventListener("resize",checkOrientation);
 window.addEventListener("load",checkOrientation);
+
+let lastScale=1;
+
+window.addEventListener("gesturestart",e=>{
+lastScale=e.scale;
+});
+
+window.addEventListener("gesturechange",e=>{
+if(e.scale>1){
+slider.style.overflowX="hidden";
+}else{
+slider.style.overflowX="auto";
+}
+});
+
+window.addEventListener("gestureend",e=>{
+if(e.scale<=1){
+slider.style.overflowX="auto";
+}
+});
 
 </script>
 
