@@ -4,6 +4,8 @@
 
 <head>
 
+<script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom/dist/panzoom.min.js"></script>
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Katalog Produk</title>
@@ -99,6 +101,12 @@ max-width:80%;
 max-height:80%;
 object-fit:contain;
 }
+
+.zoom{
+overflow:hidden;
+touch-action:none;
+}
+
 </style>
 
 </head>
@@ -115,7 +123,16 @@ object-fit:contain;
 <script>
 
 for(let i=1;i<=28;i++){
-document.write('<div class="slide"><img src="'+i+'.jpg" loading="lazy"></div>');
+document.write('
+
+<div class="slide">
+
+<div class="zoom">
+<img src="1.jpg" loading="lazy">
+</div>
+
+</div>
+');
 }
 
 </script>
@@ -220,7 +237,7 @@ hideTimer=setTimeout(()=>{
 controls.style.opacity="0";
 controls.style.pointerEvents="none";
 
-},1500);
+},1000);
 
 }
 
@@ -245,6 +262,13 @@ document.getElementById("rotate").style.display="none";
 
 window.addEventListener("resize",checkOrientation);
 window.addEventListener("load",checkOrientation);
+
+document.querySelectorAll('.zoom').forEach(el=>{
+Panzoom(el,{
+maxScale:4,
+contain:"outside"
+});
+});
 
 </script>
 
